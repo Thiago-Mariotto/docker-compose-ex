@@ -1,27 +1,28 @@
 import './App.css';
 import React, {useEffect, useState} from 'react'; 
-import axios from 'axios';
+import api from './utils/api';
 
 function App() {
 
   const [instructors, setInstructors] = useState([]);
 
   useEffect(() => {
-    findInstructors()
-  }, [instructors]);
+    api.get('/').then(response => {setInstructors(response.data)});
+  }, []);
 
-  const findInstructors = async () => {
-    const instru = await axios.get('http://localhost:3333')
-    setInstructors(instru);
-  }
 
   return (
     <div className="App">
-      <ul>
-        {instructors.map((p, i) => {
-          <li>Team ${i+1} - ${p.name} | ${i.role}</li>
-        })}
-      </ul>
+      <div className="App-header">
+        <ul>
+          {
+            instructors.map(p => (
+              <li key={p.name}>
+                <p>{p.name}: {p.role}</p>
+              </li>
+            ))}
+        </ul>
+      </div>
     </div>
   );
 }
