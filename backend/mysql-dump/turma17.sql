@@ -9,4 +9,5 @@ INSERT INTO instructors (name, role) VALUES
     ('Mariotto', 'Qm qr ser backender'),
     ('Felipe', 'Data man'),
     ('Pedro', 'x1 noob'),
-    ('Tiago', 'Hj eu só quero paz')
+    ('Tiago', 'Hj eu so quero paz'),
+    ('Lud', 'hoje?')

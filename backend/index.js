@@ -1,4 +1,3 @@
-require('dotenv').config()
 const cors = require('cors');
 const express = require('express')
 const connection = require('./connection');
@@ -20,4 +19,4 @@ app.get('/', async (_req, res) => {
 	}
 })
 
-app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`))
+app.listen(PORT, () => console.log(`HELLLOOOO ${PORT}!`))
