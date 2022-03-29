@@ -1,38 +1,70 @@
 version: '3.1'
 
-networks:
-  network_local:
-    external: true
-
 services:
+  ## container do backend
   api:
+    ## cria a imagem a partir do dockerfile indicado
     build: ./backend
-    image: node:alpine
-    volumes:
-      - ./backend:/app
+
+    ## define um nome para o container
+    container_name: backend
+
+    ## realiza o bind das portas 3333 da sua máquina com a do container
     ports:
       - 3333:3333
+
+    ## depends_on inicia os serviços em ordem
     depends_on:
       - database
-    networks:
-    - network_local
+    volumes:
+    ## define que iremos utilizar a pasta node_modules do container
+    - usr/src/app/node_modules
 
-  database:
+    ## cria uma referencia da nossa pasta local para a pasta de workdir do container
+    ## alterações realizadas localmente serão transparecidas para o container
+    - ./backend:/usr/src/app
+
+  ## container do backend
+  database: ## container do mysql (database)
     image: mysql:5.7
     restart: always
-    environment:
-      - MYSQL_ROOT_PASSWORD=docker
+
+    ## define um nome para o container
+    container_name: mysql
+
+    ## realiza o bind das portas 3306 da sua máquina com a do container
     ports:
       - 3306:3306
-    networks:
-    - network_local
 
+    ## o sql precisa de algumas variaveis de configuração
+    environment:
+      - MYSQL_ROOT_PASSWORD=docker
+
+    ## realiza o dump de um arquivo sql ao inicializar o container
+    volumes:
+    - ./backend/mysql-dump:/docker-entrypoint-initdb.d
+  
+  ## container do front (react)
   web:
+    ## cria a imagem a partir do dockerfile indicado
     build: ./frontend
-    image: node:13-alpine
+
+    ## define um nome para o container
+    container_name: frontend
+
+    ## realiza o bind das portas 3000 da sua máquina com a do container
     ports:
       - 3000:3000
+
+    ## 
+    volumes:
+    ## define que iremos utilizar a pasta node_modules do container
+    - /app/node_modules
+
+    ## cria uma referencia da nossa pasta local para a pasta de workdir do container
+    ## alterações realizadas localmente serão transparecidas para o container
+    - ./frontend:/app
+    
+    ## depends_on inicia os serviços em ordem
     depends_on:
       - api
-    networks:
-    - network_local
